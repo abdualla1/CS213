@@ -83,21 +83,25 @@ bool Teddy(int n) {
     return false;
 }
 
-void PhishingScanner(const string& filename) {
-    vector<pair<string, int>> phishingKeywords = {
-            {"password", 3}, {"login", 3}, {"credit card", 3}, {"bank", 3},
-            {"social security", 3}, {"verify", 2}, {"click", 2}, {"urgent", 2},
-            {"account", 2}, {"update", 2}, {"limited time", 2}, {"confirm", 2},
-            {"secure", 1}, {"sensitive", 1}, {"pay now", 1}, {"threat", 1},
-            {"unauthorized", 2}, {"failure", 1}, {"risk", 2}, {"support", 2},
-            {"paypal", 3}, {"ebay", 3}, {"amazon", 3}, {"transaction", 1},
-            {"alert", 1}, {"congratulations", 1}, {"offer", 2}, {"request", 1},
-            {"dear customer", 1}, {"free", 1}
-    };
+void PhishingScanner(const string& filename, const string& keywordsFile) {
+    ifstream keywordsStream(keywordsFile);
+    if (!keywordsStream) {
+        cerr << "Error: Could not open the keywords file!" << endl;
+        return;
+    }
+
+    // Read keywords and points from the file
+    vector<pair<string, int>> phishingKeywords;
+    string keyword;
+    int points;
+    while (keywordsStream >> keyword >> points) {
+        phishingKeywords.emplace_back(keyword, points);
+    }
+    keywordsStream.close();
 
     ifstream file(filename);
     if (!file) {
-        cerr << "Error: Could not open the file!" << endl;
+        cerr << "Error: Could not open the file to scan!" << endl;
         return;
     }
 
@@ -106,7 +110,7 @@ void PhishingScanner(const string& filename) {
     map<string, int> keywordCounts;
     while (getline(file, line)) {
         transform(line.begin(), line.end(), line.begin(), ::tolower);
-        for (const auto& [keyword, score] : phishingKeywords) {
+        for (const auto &[keyword, score]: phishingKeywords) {
             size_t pos = line.find(keyword);
             while (pos != string::npos) {
                 keywordCounts[keyword]++;
@@ -118,11 +122,13 @@ void PhishingScanner(const string& filename) {
     file.close();
 
     cout << "Phishing Report:" << endl;
-    for (const auto& [keyword, count] : keywordCounts) {
-        cout << "Keyword: " << keyword << ", Count: " << count << ", Total Points: " << count * phishingKeywords[0].second << endl;
+    for (const auto &[keyword, count]: keywordCounts) {
+        int keywordPoints = count * phishingKeywords[0].second;
+        cout << "Keyword: " << keyword << ", Count: " << count << ", Total Points: " << keywordPoints << endl;
     }
     cout << "Total Phishing Score: " << totalScore << endl;
-    cout << (totalScore >= 10 ? "Warning: This email appears highly suspicious!" : "This email seems legitimate.") << endl;
+    cout << (totalScore >= 10 ? "Warning: This email appears highly suspicious!" : "This email seems legitimate.")
+         << endl;
 }
 
 void solve() {
@@ -207,8 +213,13 @@ void solve() {
                 cout << "Enter the filename to scan for phishing terms: ";
                 string filename;
                 cin >> filename;
-                if (validator.isValidFile(filename)) {
-                    PhishingScanner(filename);
+
+                cout << "Enter the filename containing the phishing keywords and their points: ";
+                string keywordsFile;
+                cin >> keywordsFile;
+
+                if (validator.isValidFile(filename) && validator.isValidFile(keywordsFile)) {
+                    PhishingScanner(filename, keywordsFile);
                 } else {
                     cout << "Error: Invalid file name or file does not exist." << endl;
                 }
