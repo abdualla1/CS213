@@ -123,6 +123,17 @@ void problem7()
     if(!FormsDominoChain(dominos))
         cout << "No solution" << endl;
 }
+wstring trim(const wstring& str) {
+    auto start = str.begin();
+    while (start != str.end() && isspace(*start)) {
+        ++start;
+    }
+    auto end = str.end();
+    do {
+        --end;
+    } while (end != start && isspace(*end));
+    return wstring(start, end + 1);
+}
 map<wstring,vector<wstring>> loadTable(wifstream &file){
     map<wstring,vector<wstring>> table;
     file.imbue(locale(file.getloc(), new codecvt_utf8<wchar_t>));
@@ -135,12 +146,26 @@ map<wstring,vector<wstring>> loadTable(wifstream &file){
     while(getline(file, line))
     {
         wistringstream lineStream(line);
-        wstring key;
-        lineStream >> key;
-        wstring value;
-        while(lineStream >> value)
+        wstring word, key;
+        for (int i = 0; i < line.length(); i++)
         {
-            table[key].push_back(value);
+            if(line[i] == ',' || line[i] == '/' || line[i] == ':' || i == line.length() - 1)
+            {
+                if(key.empty())
+                {
+                    key = trim(word);
+                }
+                else
+                {
+                    if(i == line.length() - 1) word += line[i];
+                    table[key].push_back(trim(word));
+                }
+                word.clear();
+            }
+            else
+            {
+                word += line[i];
+            }
         }
     }
     return table; 
