@@ -133,7 +133,8 @@ bool FormsDominoChain(vector<Domino> &dominos)
     {
         for (int i = 0; i < chain.size(); i++)
         {
-            (i == chain.size() - 1) ? cout << chain[i].leftDots << "|" << chain[i].rightDots << endl : cout << chain[i].leftDots << "|" << chain[i].rightDots << " - ";
+            if (i == chain.size() - 1) cout << chain[i].leftDots << "|" << chain[i].rightDots << endl;
+            else cout << chain[i].leftDots << "|" << chain[i].rightDots << " - ";
         }
         return true;
     }
@@ -344,7 +345,7 @@ int main()
             break;
         }
         case 0:
-            cout << "Exiting the program" << endl;
+            cout << "Exiting the program!" << endl;
             return 0;
         default:
             cout << "Invalid Choice!" << endl << "Please select a valid choice." << endl;
