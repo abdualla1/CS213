@@ -15,7 +15,7 @@ void runAllOperations() {
             cin >> coefficients1[i];
         }
         degree2 = degree1;
-        // cin >> degree2;
+        // cin >> degree2; // Uncomment this line to input different degrees for p1 and p2
         vector<double> coefficients2(degree2 + 1);
         for (int i = 0; i <= degree2; i++)
         {
@@ -196,9 +196,9 @@ void runAllOperations() {
 };
 
 int main() {
-    int t = 20;
+    int t = 30;
     while(t--){
-        cout << "Test" << 20 - t << ':' << endl;
+        cout << "Test" << 30 - t << ':' << endl;
         PolynomialInterface interface;
         interface.runAllOperations();
     }
