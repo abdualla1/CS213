@@ -1,151 +1,205 @@
+#include <bits/stdc++.h>
+#include <codecvt>
 #include "Polynomial.h"
+using namespace std;
+#define endl '\n'
+#define ll long long
 
-// Constructors
-Polynomial::Polynomial() {}
+class PolynomialInterface {
+public:
+void runAllOperations() {
+        int degree1, degree2;
+        cin >> degree1;
+        vector<double> coefficients1(degree1 + 1);
+        for (int i = 0; i <= degree1; ++i) {
+            cin >> coefficients1[i];
+        }
+        degree2 = degree1;
+        // cin >> degree2;
+        vector<double> coefficients2(degree2 + 1);
+        for (int i = 0; i <= degree2; i++)
+        {
+            cin >> coefficients2[i];
+        }
+        
+        Polynomial p1(coefficients1);
+        Polynomial p2(coefficients2);
+        cout << endl;
+        cout << "Polynomial p1: " << p1 << endl;
+        cout << "Polynomial p2: " << p2 << endl;
 
-Polynomial::Polynomial(const vector<double>& coefficients) : coeffs(coefficients) {}
+        // Addition
+        Polynomial sum = p1 + p2;
+        cout << "p1 + p2: " << sum << endl;
 
-Polynomial::Polynomial(const Polynomial& other) : coeffs(other.coeffs) {}
+        // Subtraction
+        Polynomial diff = p1 - p2;
+        cout << "p1 - p2: " << diff << endl;
 
-// Destructor
-Polynomial::~Polynomial() {}
+        // Multiplication
+        Polynomial prod = p1 * p2;
+        cout << "p1 * p2: " << prod << endl;
 
-// Assignment operator
-Polynomial& Polynomial::operator=(const Polynomial& other) {
-    if (this != &other) {
-        coeffs = other.coeffs;
+        // Equality
+        bool isEqual = (p1 == p2);
+        cout << "p1 == p2: " << (isEqual ? "true" : "false") << endl;
+
+        // Degree
+        cout << "Degree of p1: " << p1.degree() << endl;
+        cout << "Degree of p2: " << p2.degree() << endl;
+
+        // Evaluation
+        double x = 2;
+        double eval1 = p1.evaluate(x);
+        double eval2 = p2.evaluate(x);
+        cout << "p1 evaluated at x=" << x << ": " << eval1 << endl;
+        cout << "p2 evaluated at x=" << x << ": " << eval2 << endl;
+
+        //Composition
+        // Polynomial comp = p1.compose(p2);
+        // cout << "p1 composed with p2: " << comp << endl;
+
+        // Derivative
+        Polynomial deriv1 = p1.derivative();
+        Polynomial deriv2 = p2.derivative();
+        cout << "Derivative of p1: " << deriv1 << endl;
+        cout << "Derivative of p2: " << deriv2 << endl;
+
+        // Integral
+        Polynomial integ1 = p1.integral();
+        Polynomial integ2 = p2.integral();
+        cout << "Integral of p1: " << integ1 << endl;
+        cout << "Integral of p2: " << integ2 << endl;
+
+        //Definite integral
+        double x1 = 0, x2 = 1;
+        double defInteg1 = p1.integral(x1, x2);
+        double defInteg2 = p2.integral(x1, x2);
+        cout << "Definite integral of p1 from " << x1 << " to " << x2 << ": " << defInteg1 << endl;
+        cout << "Definite integral of p2 from " << x1 << " to " << x2 << ": " << defInteg2 << endl;
+
+        //Root finding
+        // try {
+        //     double root1 = p1.getRoot();
+        //     cout << "Root of p1: " << root1 << endl;
+        // } catch (const runtime_error& e) {
+        //     cout << e.what() << endl;
+        //     return;
+        // }
+
+        // try {
+        //     double root2 = p2.getRoot();
+        //     cout << "Root of p2: " << root2 << endl;
+        // } catch (const runtime_error& e) {
+        //     cout << e.what() << endl;
+        //     return;
+        // }
     }
-    return *this;
-}
-
-// Arithmetic operators
-Polynomial Polynomial::operator+(const Polynomial& other) const {
-    vector<double> result(max(coeffs.size(), other.coeffs.size()), 0.0);
-    for (size_t i = 0; i < result.size(); ++i) {
-        if (i < coeffs.size()) result[i] += coeffs[i];
-        if (i < other.coeffs.size()) result[i] += other.coeffs[i];
+    Polynomial inputPolynomial(int degree) {
+        vector<double> coefficients(degree + 1);
+        cout << "Enter the coefficients from highest degree to constant term:\n";
+        for (int i = degree; i >= 0; --i) {
+            cout << "Coefficient of x^" << i << ": ";
+            cin >> coefficients[i];
+        }
+        return Polynomial(coefficients);
     }
-    return Polynomial(result);
-}
-
-Polynomial Polynomial::operator-(const Polynomial& other) const {
-    vector<double> result(max(coeffs.size(), other.coeffs.size()), 0.0);
-    for (size_t i = 0; i < result.size(); ++i) {
-        if (i < coeffs.size()) result[i] += coeffs[i];
-        if (i < other.coeffs.size()) result[i] -= other.coeffs[i];
+    void displayPolynomials(const Polynomial& p1, const Polynomial& p2) {
+        cout << "Polynomial p1: " << p1 << endl;
+        cout << "Polynomial p2: " << p2 << endl;
     }
-    return Polynomial(result);
-}
 
-Polynomial Polynomial::operator*(const Polynomial& other) const {
-    vector<double> result(coeffs.size() + other.coeffs.size() - 1, 0.0);
-    for (size_t i = 0; i < coeffs.size(); ++i) {
-        for (size_t j = 0; j < other.coeffs.size(); ++j) {
-            result[i + j] += coeffs[i] * other.coeffs[j];
+    void addPolynomials(const Polynomial& p1, const Polynomial& p2) {
+        Polynomial sum = p1 + p2;
+        cout << "p1 + p2: " << sum << endl;
+    }
+
+    void subtractPolynomials(const Polynomial& p1, const Polynomial& p2) {
+        Polynomial diff = p1 - p2;
+        cout << "p1 - p2: " << diff << endl;
+    }
+
+    void multiplyPolynomials(const Polynomial& p1, const Polynomial& p2) {
+        Polynomial prod = p1 * p2;
+        cout << "p1 * p2: " << prod << endl;
+    }
+
+    void checkEquality(const Polynomial& p1, const Polynomial& p2) {
+        bool isEqual = (p1 == p2);
+        cout << "p1 == p2: " << (isEqual ? "true" : "false") << endl;
+    }
+
+    void getDegree(const Polynomial& p1) {
+        cout << "Degree of p1: " << p1.degree() << endl;
+    }
+
+    void evaluatePolynomial(const Polynomial& p1) {
+        double x;
+        cout << "Enter value of x: ";
+        cin >> x;
+        double eval = p1.evaluate(x);
+        cout << "p1 evaluated at x=" << x << ": " << eval << endl;
+    }
+
+    void composePolynomials(const Polynomial& p1, const Polynomial& p2) {
+        Polynomial comp = p1.compose(p2);
+        cout << "p1 composed with p2: " << comp << endl;
+    }
+
+    void getDerivative(const Polynomial& p1) {
+        Polynomial deriv = p1.derivative();
+        cout << "Derivative of p1: " << deriv << endl;
+    }
+
+    void getIntegral(const Polynomial& p1) {
+        Polynomial integ = p1.integral();
+        cout << "Integral of p1: " << integ << endl;
+    }
+
+    void getDefiniteIntegral(const Polynomial& p1) {
+        double x1, x2;
+        cout << "Enter lower limit x1: ";
+        cin >> x1;
+        cout << "Enter upper limit x2: ";
+        cin >> x2;
+        double defInteg = p1.integral(x1, x2);
+        cout << "Definite integral of p1 from " << x1 << " to " << x2 << ": " << defInteg << endl;
+    }
+
+    void findRoot(const Polynomial& p1) {
+        try {
+            double root = p1.getRoot();
+            cout << "Root of p1: " << root << endl;
+        } catch (const runtime_error& e) {
+            cout << "Error finding root: " << e.what() << endl;
         }
     }
-    return Polynomial(result);
-}
 
-// Equality operator
-bool Polynomial::operator==(const Polynomial& other) const {
-    return coeffs == other.coeffs;
-}
+    void setCoefficients(Polynomial& p1) {
+        vector<double> coefficients(p1.degree() + 1);
+        cout << "Enter the coefficients: ";
+        for (int i = 0; i <= p1.degree(); ++i) {
+            cin >> coefficients[i];
+        }
+        p1.setCoefficients(coefficients);
+        cout << "p1 after setting new coefficients: " << p1 << endl;
+    }
 
-// Output operator
-ostream& operator<<(ostream& out, const Polynomial& poly) {
-    for (int i = poly.coeffs.size() - 1; i >= 0; --i) {
-        if (poly.coeffs[i] != 0) {
-            if (i != poly.coeffs.size() - 1 && poly.coeffs[i] > 0) out << "+";
-            out << poly.coeffs[i];
-            if (i > 0) out << "x";
-            if (i > 1) out << "^" << i;
-            out << " ";
+    void getCoefficient(const Polynomial& p1) {
+        try {
+            double coeff = p1.getCoefficient(p1.degree());
+            cout << "Coefficient of x^" << p1.degree() << " in p1: " << coeff << endl;
+        } catch (const out_of_range& e) {
+            cout << "Error getting coefficient: " << e.what() << endl;
         }
     }
-    return out;
-}
-
-// Utility functions
-int Polynomial::degree() const {
-    return coeffs.size() - 1;
-}
-
-double Polynomial::evaluate(double x) const {
-    double result = 0.0;
-    for (int i = coeffs.size() - 1; i >= 0; --i) {
-        result = result * x + coeffs[i];
-    }
-    return result;
-}
-
-Polynomial Polynomial::compose(const Polynomial& q) const {
-    Polynomial result;
-    for (int i = coeffs.size() - 1; i >= 0; --i) {
-        result = result * q + Polynomial({coeffs[i]});
-    }
-    return result;
-}
-
-Polynomial Polynomial::derivative() const {
-    vector<double> result;
-    for (int i = 1; i < coeffs.size(); ++i) {
-        result.push_back(coeffs[i] * i);
-    }
-    return Polynomial(result);
-}
-
-Polynomial Polynomial::integral() const {
-    vector<double> result = {0.0};
-    for (int i = 0; i < coeffs.size(); ++i) {
-        result.push_back(coeffs[i] / (i + 1));
-    }
-    return Polynomial(result);
-}
-
-double Polynomial::integral(double x1, double x2) const {
-    Polynomial integralPoly = integral();
-    return integralPoly.evaluate(x2) - integralPoly.evaluate(x1);
-}
-
-double Polynomial::getRoot(double guess, double tolerance, int maxIter) {
-    Polynomial deriv = derivative();
-    for (int i = 0; i < maxIter; ++i) {
-        double value = evaluate(guess);
-        if (abs(value) < tolerance) return guess;
-        double derivValue = deriv.evaluate(guess);
-        if (derivValue == 0) break;
-        guess -= value / derivValue;
-    }
-    return guess;
-}
-
-void Polynomial::setCoefficients(const vector<double>& coefficients) {
-    coeffs = coefficients;
-}
-
-double Polynomial::getCoefficient(int degree) const {
-    if (degree < 0 || degree >= coeffs.size()) return 0.0;
-    return coeffs[degree];
-}
+};
 
 int main() {
-    Polynomial p1({1, -2, 3}); // Represents 1 - 2x + 3x^2
-    Polynomial p2({-1, 4}); // Represents -1 + 4x
-
-    Polynomial sum = p1 + p2;
-    Polynomial difference = p1 - p2;
-    Polynomial product = p1 * p2;
-
-    cout << "p1: " << p1 << endl;
-    cout << "p2: " << p2 << endl;
-    cout << "p1 + p2: " << sum << endl;
-    cout << "p1 - p2: " << difference << endl;
-    cout << "p1 * p2: " << product << endl;
-
-    double x = 2.5;
-    cout << "p1 evaluated at x = " << x << ": " << p1.evaluate(x) << endl;
-    cout << "p2 evaluated at x = " << x << ": " << p2.evaluate(x) << endl;
-
-    return 0;
+    int t = 20;
+    while(t--){
+        cout << "Test" << 20 - t << ':' << endl;
+        PolynomialInterface interface;
+        interface.runAllOperations();
+    }
 }
