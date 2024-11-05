@@ -1,0 +1,19 @@
+// cout << "Adding register " << idxS << " (" << ALU::decToHex(valueS) << ") and register "
+//              << idxT << " (" << ALU::decToHex(valueT) << "), storing " << ALU::decToHex(result)
+//              << " in register " << idxR << endl;
+// for (int i = 0; i < 16; i++)
+// {
+//     cout << "Register " << i << ": " << ALU::decToHex(processor.reg.getCell(i)) << endl;
+// }
+// cout << "Memory Contents:" << endl;
+// for (int i = 0; i < memory.size; i++)
+// {
+//     if (!memory.getCell(i).empty())
+//     {
+//         cout << "Memory[" << i << "] = " << memory.getCell(i) << endl;
+//     }
+// }
+// cerr << "Error! Attempted to fetch from uninitialized memory at PC: " << programCounter - 1 << endl;
+// int s = (value == 0)? 1 : int(log2(value)) + 1;
+// steps %= s;
+// return ((value >> steps) | (value << (s - steps))) % 256;
