@@ -48,8 +48,8 @@ public:
     {
         float valueS = ALU::hexToFloat(ALU::decToHex(reg.getCell(idxS)));
         float valueT = ALU::hexToFloat(ALU::decToHex(reg.getCell(idxT)));
-        float result = (valueS + valueT) & 0xFF;
-        reg.setCell(idxR, ALU::floatToHex(result));
+        float result = fmod(valueS + valueT, 0xFF);
+        reg.setCell(idxR, int(result));
         return result;
     }
     void bitwiseOr(int idxR, int idxS, int idxT, Register &reg)

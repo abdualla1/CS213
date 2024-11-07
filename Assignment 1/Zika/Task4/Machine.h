@@ -41,6 +41,30 @@ public:
     void outputState() const
     {
         cout << "Program Counter: " << processor.programCounter << endl;
+        for (int i = 0; i < 16; i++)
+        {
+            cout << "Register " << i << ": " << ALU::decToHex(processor.reg.getCell(i)) << endl;
+        }
+        cout << "Memory Contents:" << endl;
+        for (int row = 0; row < memory.size; row += 16)
+        {
+            for (int col = 0; col < 16; ++col)
+            {
+                int index = row + col;
+                if (index < memory.size)
+                {
+                    if (!memory.getCell(index).empty())
+                    {
+                        cout << setw(3) << memory.getCell(index) << " ";
+                    }
+                    else
+                    {
+                        cout << " 00 ";
+                    }
+                }
+            }
+            cout << endl;
+        }
         cout << "Expected output: ";
         for (auto &i : expectedOutput)
         {
