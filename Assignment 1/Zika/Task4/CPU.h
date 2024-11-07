@@ -74,6 +74,9 @@ public:
         case 0x5:
             cu.addIntegers(instr[1], instr[2], instr[3], reg);
             break;
+        case 0x6:
+            cu.addFloats(instr[1], instr[2], instr[3], reg);
+            break;
         case 0x7:
             cu.bitwiseOr(instr[1], instr[2], instr[3], reg);
             break;

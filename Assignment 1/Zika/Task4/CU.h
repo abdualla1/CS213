@@ -44,7 +44,14 @@ public:
         int result = (valueS + valueT) % 256;
         reg.setCell(idxR, result);
     }
-
+    float addFloats(int idxR, int idxS, int idxT, Register &reg)
+    {
+        float valueS = ALU::hexToFloat(ALU::decToHex(reg.getCell(idxS)));
+        float valueT = ALU::hexToFloat(ALU::decToHex(reg.getCell(idxT)));
+        float result = (valueS + valueT) & 0xFF;
+        reg.setCell(idxR, ALU::floatToHex(result));
+        return result;
+    }
     void bitwiseOr(int idxR, int idxS, int idxT, Register &reg)
     {
         reg.setCell(idxR, ALU::bitwiseOr(idxS, idxT, reg));
