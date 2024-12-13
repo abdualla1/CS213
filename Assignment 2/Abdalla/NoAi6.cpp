@@ -1,9 +1,8 @@
 #include <iostream>
-#include <sstream>
-#include "MisereBoard.h"
+#include "BoardGame_Classes.h"
+#include "MisereTicTacToe.h"
 
 using namespace std;
-
 class OutputInterceptor : public streambuf {
 public:
     OutputInterceptor(streambuf* originalBuffer) : originalBuffer(originalBuffer) {}
@@ -15,10 +14,10 @@ protected:
             buffer += ch;
 
             if (buffer.find("Player 1 wins") != string::npos) {
-                buffer.replace(buffer.find("Player 1 wins"), 14, "Player 2 Wins");
+                buffer.replace(buffer.find("Player 1 wins"), 14, "Player 2 Wins!");
             }
             if (buffer.find("Player 2 wins") != string::npos) {
-                buffer.replace(buffer.find("Player 2 wins"), 14, "Player 1 Wins");
+                buffer.replace(buffer.find("Player 2 wins"), 14, "Player 1 Wins!");
             }
         }
 
@@ -30,58 +29,66 @@ public:
     string buffer;
     streambuf* originalBuffer;
 };
+int main() {
+    Player<char>* players[2];
+    Misere_Board<char>* board = new Misere_Board<char>();
+    string player1Name = "Player 1", player2Name = "Player 2";
 
-void playMisereTicTacToe() {
-    cout << "Choose game mode:\n";
-    cout << "1. Player vs Player\n";
-    cout << "2. Player vs Random Player\n";
-    cout << "3. Player vs Smart AI\n";
+    cout << "Welcome to Misere Tic Tac Toe!\n";
+    cout << "Choose Your Mode: " << endl;
+    cout << "1. Player vs Player" << endl;
+    cout << "2. Player vs Smart Computer" << endl;
+    cout << "3. Player vs Random Computer" << endl;
+    cout << "Enter your choice: ";
+
     int choice;
     cin >> choice;
 
-    MisereBoard<char> board;
+    // Validate choice
+    if (choice < 1 || choice > 3) {
+        cout << "Invalid choice. Exiting the game.\n";
+        delete board;
+        return 1;
+    }
 
-    MiserePlayer<char> player1("Player 1", 'X');
-    MiserePlayer<char> player2("Player 2", 'O');
-    MisereRandomPlayer<char> randomPlayer('O');
-//    MisereSmartPlayer<char> smartAI('O');
+    // Player 1 is always human
+    players[0] = new Misere_Player<char>(player1Name, 'X');
+    players[0]->setBoard(board);
 
-    player1.setBoard(&board);
-    player2.setBoard(&board);
-    randomPlayer.setBoard(&board);
-//    smartAI.setBoard(&board);
+    // Configure Player 2 based on choice
+    switch (choice) {
+        case 1: // Player vs Player
+            players[1] = new Misere_Player<char>(player2Name, 'O');
+            players[1]->setBoard(board);
+            break;
+        case 2: // Player vs Smart Computer
+            players[1] = new Misere_SmartPlayer<char>('O');
+            players[1]->setBoard(board);
+            break;
+        case 3: // Player vs Random Computer
+            players[1] = new Misere_RandomPlayer<char>('O');
+            players[1]->setBoard(board);
+            break;
+    }
 
+    // Redirect output for result swapping
     streambuf* originalBuffer = cout.rdbuf();
-
     OutputInterceptor interceptor(originalBuffer);
     cout.rdbuf(&interceptor);
 
-    if (choice == 1) {
-        Player<char>* players[2] = {&player1, &player2};
-        GameManager<char> gameManager(&board, players);
-        gameManager.run();
-    } else if (choice == 2) {
-        Player<char> *players[2] = {&player1, &randomPlayer};
-        GameManager<char> gameManager(&board, players);
-        gameManager.run();
-//    } else if (choice == 3) {
-//        // Player vs Smart AI
-//        Player<char>* players[2] = {&player1, &smartAI};
-//        GameManager<char> gameManager(&board, players);
-//        gameManager.run();
-//    }
-    } else {
-        cout << "Invalid choice.\n";
-        return;
-    }
+    // Run the game
+    GameManager<char> gameManager(board, players);
+    gameManager.run();
 
+    // Restore original buffer and print modified output
     cout.rdbuf(originalBuffer);
-
     cout << interceptor.buffer;
-}
 
-int main() {
-    cout << "Welcome to Misere Tic-Tac-Toe!\n";
-    playMisereTicTacToe();
+    // Clean up resources
+    delete board;
+    delete players[0];
+    delete players[1];
+
     return 0;
 }
+
