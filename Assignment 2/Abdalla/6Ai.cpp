@@ -3,9 +3,9 @@
 #include "MisereTicTacToe.h"
 
 using namespace std;
-class OutputInterceptor : public streambuf {
+class BufferManip : public streambuf {
 public:
-    OutputInterceptor(streambuf* originalBuffer) : originalBuffer(originalBuffer) {}
+    BufferManip(streambuf* originalBuffer) : originalBuffer(originalBuffer) {}
 
 protected:
     virtual int overflow(int c) override {
@@ -35,6 +35,7 @@ int main() {
     string player1Name = "Player 1", player2Name = "Player 2";
 
     cout << "Welcome to Misere Tic Tac Toe!\n";
+    cout << "You are Player 1, and you will play as 'X'.\n";
     cout << "Choose Your Mode: " << endl;
     cout << "1. Player vs Player" << endl;
     cout << "2. Player vs Smart Computer" << endl;
@@ -44,7 +45,6 @@ int main() {
     int choice;
     cin >> choice;
 
-    // Validate choice
     if (choice < 1 || choice > 3) {
         cout << "Invalid choice. Exiting the game.\n";
         delete board;
@@ -55,36 +55,31 @@ int main() {
     players[0] = new Misere_Player<char>(player1Name, 'X');
     players[0]->setBoard(board);
 
-    // Configure Player 2 based on choice
     switch (choice) {
         case 1: // Player vs Player
             players[1] = new Misere_Player<char>(player2Name, 'O');
             players[1]->setBoard(board);
             break;
-        case 2: // Player vs Smart Computer
+        case 2: 
             players[1] = new Misere_SmartPlayer<char>('O');
             players[1]->setBoard(board);
             break;
-        case 3: // Player vs Random Computer
+        case 3: 
             players[1] = new Misere_RandomPlayer<char>('O');
             players[1]->setBoard(board);
             break;
     }
 
-    // Redirect output for result swapping
     streambuf* originalBuffer = cout.rdbuf();
-    OutputInterceptor interceptor(originalBuffer);
+    BufferManip interceptor(originalBuffer);
     cout.rdbuf(&interceptor);
 
-    // Run the game
     GameManager<char> gameManager(board, players);
     gameManager.run();
 
-    // Restore original buffer and print modified output
     cout.rdbuf(originalBuffer);
     cout << interceptor.buffer;
 
-    // Clean up resources
     delete board;
     delete players[0];
     delete players[1];
