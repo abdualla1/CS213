@@ -8,7 +8,7 @@ using namespace std;
 Template
 class Word : public Board<T>
 {
-    private:
+    protected:
         set<string> dictionary;
         char mark;
     public:
@@ -21,6 +21,7 @@ class Word : public Board<T>
         void load_dictionary(const string &filename = "dic.txt");
         bool is_word(const string &word);
         void set_mark(char mark);
+        set<string> getDictionary() { return dictionary; }
 };
 
 Template

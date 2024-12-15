@@ -485,7 +485,6 @@ void runGame9()
     }
 }
 
-// Do a menu for the game in the directory and header files using case switch and input handling
 int main()
 {
     cout << "Welcome to Tic Tac Toe Game!\n";
@@ -536,6 +535,6 @@ int main()
         cout << "Invalid choice. Exiting the game.\n";
         break;
     }
-
+    
     return 0;
 }
