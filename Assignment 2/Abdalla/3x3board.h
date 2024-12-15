@@ -35,7 +35,7 @@ public:
 
 private:
     int calculateMinMax(T s, bool isMaximizing);
-    std::pair<int, int> getBestMove();
+    pair<int, int> getBestMove();
 };
 
 
@@ -142,7 +142,7 @@ void Misere_RandomPlayer<T>::getmove(int& x, int& y) {
 }
 template <typename T>
 void Misere_SmartPlayer<T>::getmove(int& x, int& y) {
-    std::pair<int, int> bestMove = getBestMove();
+    pair<int, int> bestMove = getBestMove();
     x = bestMove.first;
     y = bestMove.second;
 }
@@ -155,7 +155,7 @@ int Misere_SmartPlayer<T>::calculateMinMax(T s, bool isMaximizing) {
         return 0;
 
 
-    int bestValue = isMaximizing ? std::numeric_limits<int>::min() : std::numeric_limits<int>::max();
+    int bestValue = isMaximizing ? numeric_limits<int>::min() : numeric_limits<int>::max();
     T opponentSymbol = (s == 'X') ? 'O' : 'X';
 
     for (int i = 0; i < 3; ++i) {
@@ -165,9 +165,9 @@ int Misere_SmartPlayer<T>::calculateMinMax(T s, bool isMaximizing) {
                 this->boardPtr->update_board(i, j, 0);
 
                 if (isMaximizing) {
-                    bestValue = std::max(bestValue, value);
+                    bestValue = max(bestValue, value);
                 } else {
-                    bestValue = std::min(bestValue, value);
+                    bestValue = min(bestValue, value);
                 }
             }
         }
@@ -178,9 +178,9 @@ int Misere_SmartPlayer<T>::calculateMinMax(T s, bool isMaximizing) {
 
 
 template <typename T>
-std::pair<int, int> Misere_SmartPlayer<T>::getBestMove() {
-    int bestValue = std::numeric_limits<int>::min();
-    std::pair<int, int> bestMove = {-1, -1};
+pair<int, int> Misere_SmartPlayer<T>::getBestMove() {
+    int bestValue = numeric_limits<int>::min();
+    pair<int, int> bestMove = {-1, -1};
 
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {
