@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <ctime>
 #include <iomanip>
+#include <vector>
+#include <limits>
 
 using namespace std;
 
@@ -18,6 +20,10 @@ public:
     bool is_draw() override;
     bool game_is_over() override;
     int count_three_in_a_row(T symbol);
+
+    int getRows() const { return this->rows; }
+    int getColumns() const { return this->columns; }
+    T** getBoard() const { return this->board; }
 };
 
 template <typename T>
@@ -33,8 +39,6 @@ public:
     FiveByFive_RandomPlayer(T symbol);
     void getmove(int& x, int& y) override;
 };
-
-//----------------------------------- IMPLEMENTATION -----------------------------------
 
 template <typename T>
 FiveByFive_Board<T>::FiveByFive_Board() {
@@ -55,7 +59,8 @@ bool FiveByFive_Board<T>::update_board(int x, int y, T symbol) {
         if (symbol == 0) {
             this->n_moves--;
             this->board[x][y] = 0;
-        } else {
+        }
+        else {
             this->n_moves++;
             this->board[x][y] = toupper(symbol);
         }
@@ -75,7 +80,7 @@ void FiveByFive_Board<T>::display_board() {
     for (int i = 0; i < this->rows; ++i) {
         cout << i << " |";
         for (int j = 0; j < this->columns; ++j) {
-            cout << setw(3) << (this->board[i][j] == 0 ? ' ' : this->board[i][j]) << " |";
+            cout << setw(3) << (this->board[i][j] == 0 ? '-' : this->board[i][j]) << " |";
         }
         cout << endl << setfill('-') << setw(this->columns * 5 + 4) << "" << endl;
     }
@@ -83,47 +88,66 @@ void FiveByFive_Board<T>::display_board() {
 
 template <typename T>
 bool FiveByFive_Board<T>::is_win() {
-    return false; // Winning depends on scoring and will be evaluated at the end of the game.
+    return false;
 }
 
 template <typename T>
 bool FiveByFive_Board<T>::is_draw() {
-    return this->n_moves == 25;
+    if (this->n_moves == 24) { 
+        int X = count_three_in_a_row('X');
+        int O = count_three_in_a_row('O');
+
+        cout << "\nGame Over!\n";
+        cout << "Player 1 (X) has " << X << " three-in-a-row(s).\n";
+        cout << "Player 2 (O) has " << O << " three-in-a-row(s).\n";
+        if (X > O)
+            cout << "Player 1 (X) wins!\n";
+
+        else if (O > X)
+            cout << "Player 2 (O) wins!\n";
+
+        else
+            cout << "Draw!\n";
+    }
+    return this->n_moves == 24; 
 }
 
 template <typename T>
 bool FiveByFive_Board<T>::game_is_over() {
-    return is_draw();
+    return is_draw(); 
 }
 
 template <typename T>
 int FiveByFive_Board<T>::count_three_in_a_row(T symbol) {
     int count = 0;
-    // Check rows
     for (int i = 0; i < this->rows; ++i) {
         for (int j = 0; j <= this->columns - 3; ++j) {
-            if (this->board[i][j] == symbol && this->board[i][j + 1] == symbol && this->board[i][j + 2] == symbol) {
+            if (this->board[i][j] == symbol &&
+                this->board[i][j + 1] == symbol &&
+                this->board[i][j + 2] == symbol) {
                 count++;
             }
         }
     }
-    // Check columns
     for (int j = 0; j < this->columns; ++j) {
         for (int i = 0; i <= this->rows - 3; ++i) {
-            if (this->board[i][j] == symbol && this->board[i + 1][j] == symbol && this->board[i + 2][j] == symbol) {
+            if (this->board[i][j] == symbol &&
+                this->board[i + 1][j] == symbol &&
+                this->board[i + 2][j] == symbol) {
                 count++;
             }
         }
     }
-    // Check diagonals
     for (int i = 0; i <= this->rows - 3; ++i) {
         for (int j = 0; j <= this->columns - 3; ++j) {
-            if (this->board[i][j] == symbol && this->board[i + 1][j + 1] == symbol && this->board[i + 2][j + 2] == symbol) {
+            if (this->board[i][j] == symbol &&
+                this->board[i + 1][j + 1] == symbol &&
+                this->board[i + 2][j + 2] == symbol) {
                 count++;
             }
-        }
-        for (int j = 2; j < this->columns; ++j) {
-            if (this->board[i][j] == symbol && this->board[i + 1][j - 1] == symbol && this->board[i + 2][j - 2] == symbol) {
+            if (this->board[i][j + 2] == symbol &&
+                this->board[i + 1][j + 1] == symbol &&
+                this->board[i + 2][j] == symbol) {
                 count++;
             }
         }
@@ -136,20 +160,50 @@ FiveByFive_Player<T>::FiveByFive_Player(string name, T symbol) : Player<T>(name,
 
 template <typename T>
 void FiveByFive_Player<T>::getmove(int& x, int& y) {
-    cout << "\nPlease enter your move x and y (0 to 4) separated by spaces: ";
-    cin >> x >> y;
+    while (true) {
+        cout << "\nPlease enter your move x and y (0 to 4) separated by spaces: ";
+        cin >> x >> y;
+        if (cin.fail() || x < 0 || x > 4 || y < 0 || y > 4) {
+            cin.clear(); 
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+            cout << "Invalid input. Please enter numbers between 0 and 4.\n";
+            continue;
+        }
+        break;
+    }
 }
 
 template <typename T>
 FiveByFive_RandomPlayer<T>::FiveByFive_RandomPlayer(T symbol) : RandomPlayer<T>(symbol) {
-    this->name = "Random Computer";
+    this->name = "Player 2";
     srand(static_cast<unsigned int>(time(0)));
 }
 
 template <typename T>
 void FiveByFive_RandomPlayer<T>::getmove(int& x, int& y) {
-        x = rand() % 5;
-        y = rand() % 5;
+    FiveByFive_Board<T>* currentBoard = dynamic_cast<FiveByFive_Board<T>*>(this->boardPtr);
+    if (!currentBoard) {
+        x = 0;
+        y = 0;
+        return;
+    }
+    vector<pair<int, int>> emptyCells;
+    for (int i = 0; i < currentBoard->getRows(); ++i) {
+        for (int j = 0; j < currentBoard->getColumns(); ++j) {
+            if (currentBoard->getBoard()[i][j] == 0) {
+                emptyCells.emplace_back(i, j);
+            }
+        }
+    }
+    if (!emptyCells.empty()) {
+        int randIndex = rand() % emptyCells.size();
+        x = emptyCells[randIndex].first;
+        y = emptyCells[randIndex].second;
+    }
+    else {
+        x = -1;
+        y = -1;
+    }
 }
 
 #endif //_FIVE_BY_FIVE_TIC_TAC_TOE_H
