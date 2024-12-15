@@ -51,12 +51,11 @@ int main() {
         return 1;
     }
 
-    // Player 1 is always human
     players[0] = new Misere_Player<char>(player1Name, 'X');
     players[0]->setBoard(board);
 
     switch (choice) {
-        case 1: // Player vs Player
+        case 1:
             players[1] = new Misere_Player<char>(player2Name, 'O');
             players[1]->setBoard(board);
             break;
