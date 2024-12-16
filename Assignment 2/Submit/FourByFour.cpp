@@ -1,11 +1,15 @@
 #ifndef _FOURBYFOUR_H
 #define _FOURBYFOUR_H
 
+#include <bits/stdc++.h>
 #include "BoardGame_Classes.h"
+#define endl '\n'
+#define ll long long
 #define Template template <class T>
 using namespace std;
 
 int new_x, new_y;
+
 Template class FourByFour : public Board<T>
 {
 public:
@@ -30,11 +34,6 @@ public:
     FourByFour_Random_Player(T symbol);
     void getmove(int &x, int &y);
 };
-
-#include <bits/stdc++.h>
-#include "BoardGame_Classes.h"
-#define endl '\n'
-#define ll long long
 
 Template
 FourByFour<T>::FourByFour()
@@ -183,8 +182,23 @@ Template void FourByFour_Player<T>::getmove(int &x, int &y)
 {
     cout << this->name << " enter your move (row and column) (0 to 3) separated by spaces: ";
     cin >> x >> y;
+    if (cin.fail())
+    {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        x = -1;
+        y = -1;
+        return;
+    }
     cout << "Enter new position (row and column) (0 to 3) separated by spaces: ";
     cin >> new_x >> new_y;
+    if (cin.fail())
+    {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        new_x = -1;
+        new_y = -1;
+    }
 }
 
 Template

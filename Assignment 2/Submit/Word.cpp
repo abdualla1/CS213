@@ -175,9 +175,21 @@ Template void Word_Player<T>::getmove(int &x, int &y)
     char c;
     cout << this->name << " enter your move (row and column) (0 to 2) separated by spaces: ";
     cin >> x >> y;
+
+    if (cin.fail())
+    {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        x = -1;
+        y = -1;
+        return;
+    }
+
     cout << "Enter a letter: ";
     cin >> c;
     this->symbol = toupper(c);
+    
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
 Template

@@ -140,6 +140,13 @@ void Misere_Player<T>::getmove(int &x, int &y)
 {
     cout << "\nPlease enter your move x and y (0 to 2) separated by spaces: ";
     cin >> x >> y;
+    if (cin.fail())
+    {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        x = -1;
+        y = -1;
+    }
 }
 
 template <typename T>
@@ -147,6 +154,7 @@ Misere_SmartPlayer<T>::Misere_SmartPlayer(T symbol) : Player<T>(symbol)
 {
     this->name = "Player 2";
 }
+
 template <typename T>
 class Misere_RandomPlayer : public RandomPlayer<T>
 {
@@ -154,18 +162,21 @@ public:
     Misere_RandomPlayer(T symbol);
     void getmove(int &x, int &y) override;
 };
+
 template <typename T>
 Misere_RandomPlayer<T>::Misere_RandomPlayer(T symbol) : RandomPlayer<T>(symbol)
 {
     this->name = "Player 2";
     srand(static_cast<unsigned int>(time(0)));
 }
+
 template <typename T>
 void Misere_RandomPlayer<T>::getmove(int &x, int &y)
 {
     x = rand() % 3;
     y = rand() % 3;
 }
+
 template <typename T>
 void Misere_SmartPlayer<T>::getmove(int &x, int &y)
 {

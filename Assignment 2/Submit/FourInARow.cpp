@@ -127,12 +127,17 @@ class FourInARowHumanPlayer : public Player<char>
 {
 public:
     FourInARowHumanPlayer(string name, char symbol) : Player<char>(name, symbol) {}
-
     void getmove(int &x, int &y) override
     {
         cout << name << " (" << symbol << "), enter column: ";
         cin >> y;
         x = 0;
+        if (cin.fail())
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            y = -1;
+        }
     }
 };
 

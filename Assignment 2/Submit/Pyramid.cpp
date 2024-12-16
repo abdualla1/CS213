@@ -159,6 +159,13 @@ Template void Pyramid_Player<T>::getmove(int &x, int &y)
 {
     cout << this->name << " enter your move (row and column) (0 t0 2) separated by spaces: ";
     cin >> x >> y;
+    if (cin.fail())
+    {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        x = -1;
+        y = -1;
+    }
 }
 
 Template
@@ -181,7 +188,6 @@ Pyramid_Ai_Player<T>::Pyramid_Ai_Player(T symbol) : Player<T>(symbol)
     this->name = "AI Player";
 }
 
-// Method to get the best move for the player
 Template void Pyramid_Ai_Player<T>::getmove(int &x, int &y)
 {
     pair<int, int> bestMove = getBestMove();
@@ -212,7 +218,7 @@ Template int Pyramid_Ai_Player<T>::calculateMinMax(T s, bool isMaximizing)
             if (this->boardPtr->update_board(i, j, s))
             {
                 int value = calculateMinMax(opponentSymbol, !isMaximizing);
-                this->boardPtr->update_board(i, j, 0); // Undo move
+                this->boardPtr->update_board(i, j, 0);
 
                 if (isMaximizing)
                 {
@@ -229,7 +235,6 @@ Template int Pyramid_Ai_Player<T>::calculateMinMax(T s, bool isMaximizing)
     return bestValue;
 }
 
-// Find the best move using the minimax algorithm
 Template
     pair<int, int>
     Pyramid_Ai_Player<T>::getBestMove()
@@ -283,7 +288,7 @@ Template
             if (this->boardPtr->update_board(i, j, this->symbol))
             {
                 int moveValue = calculateMinMax(this->symbol, false);
-                this->boardPtr->update_board(i, j, 0); // Undo move
+                this->boardPtr->update_board(i, j, 0);
 
                 if (moveValue > bestValue)
                 {

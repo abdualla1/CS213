@@ -219,6 +219,13 @@ Template void Ultimate_Player<T>::getmove(int &x, int &y)
 {
     cout << this->name << " enter your move: ";
     cin >> x >> y;
+    if (cin.fail())
+    {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        x = -1;
+        y = -1;
+    }
     y += 3;
 }
 

@@ -87,7 +87,6 @@ public:
     int get_columns() { return columns; }
     int get_cell(int row, int col) { return board[row][col]; }
 };
-
 class NumericalHumanPlayer : public Player<int>
 {
 public:
@@ -102,9 +101,18 @@ public:
             cin >> x >> y;
             cout << "Enter the number you want to place (symbol): ";
             cin >> symbol;
+            if (cin.fail())
+            {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "Invalid input. Try again.\n";
+                continue;
+            }
             if (allowedNumbers.count(symbol) == 0)
             {
                 cout << "Invalid number. You can only use your allowed numbers, and it must not be used already. Try again.\n";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 continue;
             }
             if ((last.first % 2 && symbol % 2) || (last.first % 2 == 0 && symbol % 2 == 0))

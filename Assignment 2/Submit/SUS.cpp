@@ -6,6 +6,7 @@
 #include "BoardGame_Classes.h"
 #include <string>
 #include <random>
+
 using namespace std;
 
 int scores[2] = {0, 0};
@@ -69,7 +70,6 @@ public:
         }
         delete[] board;
     }
-
     bool update_board(int x, int y, char symbol) override
     {
         if (n_moves == 9)
@@ -85,7 +85,6 @@ public:
         scores[i] += calculate_score(x, y);
         return true;
     }
-
     void display_board() override
     {
         for (int i = 0; i < rows; i++)
@@ -109,12 +108,10 @@ public:
         cout << "Player 1 Score: " << scores[0] << endl;
         cout << "Player 2 Score: " << scores[1] << endl;
     }
-
     bool is_win() override
     {
         return false;
     }
-
     bool is_draw() override
     {
         return false;
@@ -132,20 +129,26 @@ class SUSHumanPlayer : public Player<char>
 {
 public:
     SUSHumanPlayer(string n, char s) : Player<char>(n, s) {}
-
     void getmove(int &x, int &y) override
     {
         if (num_moves == 9)
             return;
         cout << name << " (" << symbol << "), enter your move (row and column): ";
         cin >> x >> y;
+
+        if (cin.fail())
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            x = -1;
+            y = -1;
+        }
     }
 };
 class SUSRandomPlayer : public Player<char>
 {
 public:
     SUSRandomPlayer(string n, char s) : Player<char>(n, s) {}
-
     void getmove(int &x, int &y) override
     {
         if (num_moves == 9)
