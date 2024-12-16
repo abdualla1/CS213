@@ -7,7 +7,6 @@
 #include <iomanip>
 #include <vector>
 #include <limits>
-
 using namespace std;
 
 template <typename T>
@@ -25,6 +24,7 @@ public:
     int getRows() const { return this->rows; }
     int getColumns() const { return this->columns; }
     T **getBoard() const { return this->board; }
+    ~FiveByFive_Board();
 };
 
 template <typename T>
@@ -57,6 +57,16 @@ FiveByFive_Board<T>::FiveByFive_Board()
         }
     }
     this->n_moves = 0;
+}
+
+template <typename T>
+FiveByFive_Board<T>::~FiveByFive_Board()
+{
+    for (int i = 0; i < this->rows; ++i)
+    {
+        delete[] this->board[i];
+    }
+    delete[] this->board;
 }
 
 template <typename T>

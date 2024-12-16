@@ -108,7 +108,12 @@ public:
     int getRows() { return rows; }
     int getColumns() { return columns; }
     int get_cell(int i, int j) { return board[i][j]; }
-
+    ~FourInARowBoard()
+    {
+        for (int i = 0; i < rows; ++i)
+            delete[] board[i];
+        delete[] board;
+    }
 private:
     bool check_direction(int x, int y, int dx, int dy)
     {

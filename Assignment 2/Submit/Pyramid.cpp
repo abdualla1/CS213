@@ -19,6 +19,7 @@ public:
     bool is_win();
     bool is_draw();
     bool game_is_over();
+    ~Pyramid();
 };
 
 // Declaration to different types of players
@@ -63,6 +64,15 @@ Pyramid<T>::Pyramid()
         }
     }
     this->n_moves = 0;
+}
+Template
+Pyramid<T>::~Pyramid()
+{
+    for (int i = 0; i < this->rows; i++)
+    {
+        delete[] this->board[i];
+    }
+    delete[] this->board;
 }
 
 Template bool Pyramid<T>::update_board(int x, int y, T symbol)

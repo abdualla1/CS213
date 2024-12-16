@@ -19,27 +19,17 @@ public:
     bool is_draw();
     bool game_is_over();
     void is_mini_win();
+    ~Ultimate();
 };
 
-Template class MainBoard : public Board<T>
-{
-public:
-    MainBoard();
-    bool update_board(int x, int y, T symbol);
-    void display_board();
-    bool is_win();
-    bool is_draw();
-    bool game_is_over();
-};
-
-Template class Ultimate_Player : public Player<T>, public Ultimate<T>
+Template class Ultimate_Player : public Player<T>
 {
 public:
     Ultimate_Player(string name, T symbol);
     void getmove(int &x, int &y);
 };
 
-Template class Ultimate_Random_Player : public RandomPlayer<T>, public Ultimate<T>
+Template class Ultimate_Random_Player : public RandomPlayer<T>
 {
 public:
     Ultimate_Random_Player(T symbol);
@@ -61,6 +51,15 @@ Ultimate<T>::Ultimate()
         }
     }
     this->n_moves = 0;
+}
+Template
+Ultimate<T>::~Ultimate()
+{
+    for (int i = 0; i < this->rows; i++)
+    {
+        delete[] this->board[i];
+    }
+    delete[] this->board;
 }
 
 Template bool Ultimate<T>::update_board(int x, int y, T symbol)
@@ -242,4 +241,5 @@ Template void Ultimate_Random_Player<T>::getmove(int &x, int &y)
     x = rand() % this->dimension;
     y = rand() % this->dimension + 3;
 }
+
 #endif

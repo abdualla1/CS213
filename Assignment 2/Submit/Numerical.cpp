@@ -86,6 +86,12 @@ public:
     int get_rows() { return rows; }
     int get_columns() { return columns; }
     int get_cell(int row, int col) { return board[row][col]; }
+    ~NumericalTicTacToeBoard()
+    {
+        for (int i = 0; i < rows; ++i)
+            delete[] board[i];
+        delete[] board;
+    }
 };
 class NumericalHumanPlayer : public Player<int>
 {
@@ -135,8 +141,7 @@ public:
 class NumericalRandomPlayer : public Player<int>
 {
 public:
-    NumericalRandomPlayer(string name, const set<int> &allowedNumbers)
-        : Player<int>(name, 0), allowedNumbers(allowedNumbers) {}
+    NumericalRandomPlayer(string name, const set<int> &allowedNumbers): Player<int>(name, 0), allowedNumbers(allowedNumbers) {}
     void getmove(int &x, int &y) override
     {
         bool validMove = false;

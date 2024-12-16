@@ -19,6 +19,7 @@ public:
     bool is_win() override;
     bool is_draw() override;
     bool game_is_over() override;
+    ~Misere_Board();
 };
 
 template <typename T>
@@ -55,6 +56,15 @@ Misere_Board<T>::Misere_Board()
         }
     }
     this->n_moves = 0;
+}
+template <typename T>
+Misere_Board<T>::~Misere_Board()
+{
+    for (int i = 0; i < this->rows; ++i)
+    {
+        delete[] this->board[i];
+    }
+    delete[] this->board;
 }
 
 template <typename T>

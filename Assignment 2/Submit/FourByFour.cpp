@@ -9,7 +9,6 @@
 using namespace std;
 
 int new_x, new_y;
-
 Template class FourByFour : public Board<T>
 {
 public:
@@ -19,16 +18,17 @@ public:
     bool is_win();
     bool is_draw();
     bool game_is_over();
+    ~FourByFour();
 };
 
-Template class FourByFour_Player : public Player<T>, public FourByFour<T>
+Template class FourByFour_Player : public Player<T>
 {
 public:
     FourByFour_Player(string name, T symbol);
     void getmove(int &x, int &y);
 };
 
-Template class FourByFour_Random_Player : public RandomPlayer<T>, public FourByFour<T>
+Template class FourByFour_Random_Player : public RandomPlayer<T>
 {
 public:
     FourByFour_Random_Player(T symbol);
@@ -65,6 +65,16 @@ FourByFour<T>::FourByFour()
         }
     }
     this->n_moves = 0;
+}
+
+Template
+FourByFour<T>::~FourByFour()
+{
+    for (int i = 0; i < this->rows; i++)
+    {
+        delete[] this->board[i];
+    }
+    delete[] this->board;
 }
 
 Template bool FourByFour<T>::update_board(int x, int y, T symbol)
@@ -106,7 +116,7 @@ Template bool FourByFour<T>::is_win()
     // Check Rows
     for (int i = 0; i < this->rows; i++)
     {
-        for (int j = 0; j < 1; j++)
+        for (int j = 0; j < 2; j++)
         {
             if (this->board[i][j] == this->board[i][j + 1] && this->board[i][j + 1] == this->board[i][j + 2] && this->board[i][j + 2] == this->board[i][j] && this->board[i][j] != ' ')
             {
@@ -118,7 +128,7 @@ Template bool FourByFour<T>::is_win()
     // Check Columns
     for (int i = 0; i < this->columns; i++)
     {
-        for (int j = 0; j < 1; j++)
+        for (int j = 0; j < 2; j++)
         {
             if (this->board[j][i] == this->board[j + 1][i] && this->board[j + 1][i] == this->board[j + 2][i] && this->board[j + 2][i] == this->board[j][i] && this->board[j][i] != ' ')
             {

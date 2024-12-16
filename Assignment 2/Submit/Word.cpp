@@ -15,7 +15,6 @@ Template class Word : public Board<T>
 private:
     set<string> dictionary;
     char mark;
-
 public:
     Word();
     bool update_board(int x, int y, T symbol);
@@ -25,6 +24,7 @@ public:
     bool game_is_over();
     void load_dictionary(const string &filename = "dic.txt");
     bool is_word(const string &word);
+    ~Word();
 };
 
 Template class Word_Player : public Player<T>
@@ -57,6 +57,16 @@ Word<T>::Word()
     }
     this->n_moves = 0;
     load_dictionary();
+}
+
+Template
+Word<T>::~Word()
+{
+    for (int i = 0; i < this->rows; i++)
+    {
+        delete[] this->board[i];
+    }
+    delete[] this->board;
 }
 
 Template bool Word<T>::update_board(int x, int y, T symbol)
@@ -188,7 +198,7 @@ Template void Word_Player<T>::getmove(int &x, int &y)
     cout << "Enter a letter: ";
     cin >> c;
     this->symbol = toupper(c);
-    
+
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
